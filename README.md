@@ -107,64 +107,13 @@ MediaPipe Hands 기반 9가지 제스처를 RandomForest로 분류하고, 시선
 
 ---
 
-## 🔌 Pi 서버 엔드포인트
+## 🔌 Pi 서버 API 구조
 
-### 상태 조회
+Raspberry Pi Flask 서버(포트 5001)에 로봇팔 제어 API를 RESTful 방식으로 설계하였으며, 집기·꽂기·붓기·섞기·홈 복귀·긴급 정지 등 총 25개 엔드포인트를 구현하였습니다.
 
-| 엔드포인트 | 메서드 | 설명 |
-|-----------|--------|------|
-| `/status` | GET | 로봇 동작 상태 (busy/idle) |
-| `/state` | GET | 시험관 현재 위치 (action_log 역산) |
+모든 동작은 비동기로 실행되며, `/status` 엔드포인트의 `busy` 플래그를 WPF 클라이언트가 0.5초 간격으로 폴링하여 동작 완료를 감지하고 다음 명령을 순차 전송하는 구조입니다. `/state` 엔드포인트는 내부 action_log를 역산하여 시험관 4개의 현재 위치를 실시간으로 반환하며, WPF 배치도 Canvas의 슬롯 색상 업데이트에 사용됩니다.
 
-### 집기 (Pickup)
-
-| 엔드포인트 | 메서드 | 설명 |
-|-----------|--------|------|
-| `/pickup_move/<num>` | GET | 시약통 위치로 수직 이동 (GRAB 대기) |
-| `/pickup_grip` | GET | 그리퍼 닫기 + 수직 홈 복귀 |
-| `/pickup_grip_lift` | GET | 그리퍼 닫기 + 수평 홈 복귀 |
-| `/pickup_lift_move/<slot>` | GET | A/B 슬롯 수평 집기 이동 (GRAB 대기) |
-| `/pickup_lift/<slot>` | GET | A/B 슬롯 수평 집기 |
-
-### 꽂기 (Drop)
-
-| 엔드포인트 | 메서드 | 설명 |
-|-----------|--------|------|
-| `/drop_move/<slot>` | GET | 슬롯 위치로 수직 이동 (RELEASE 대기) |
-| `/drop_release` | GET | 그리퍼 열기 + 복귀 |
-| `/side_drop_move/<slot>` | GET | 슬롯 위치로 수평 이동 (RELEASE 대기) |
-| `/side_drop_release` | GET | 수평 놓기 + 복귀 |
-
-### 붓기 (Pour)
-
-| 엔드포인트 | 메서드 | 설명 |
-|-----------|--------|------|
-| `/beaker_move` | GET | 비커 위치로 이동 (POUR 대기) |
-| `/beaker_pour` | GET | 기울여 붓기 + 수평 홈 복귀 |
-| `/pour/<slot>` | GET | 전체 시퀀스 (집기→붓기→꽂기) |
-
-### 섞기 (Stir)
-
-| 엔드포인트 | 메서드 | 설명 |
-|-----------|--------|------|
-| `/stir_move` | GET | 막대 위치로 이동 (GRAB 대기) |
-| `/stir_grip` | GET | 막대 잡기 + 홈 복귀 |
-| `/stir_beaker_move` | GET | 비커 위치로 이동 (SHAKE 대기) |
-| `/stir_do` | GET | 섞기 동작 + 홈 복귀 |
-| `/stir_drop_move` | GET | 막대 원위치 이동 (RELEASE 대기) |
-| `/stir_drop_release` | GET | 막대 놓기 + 홈 복귀 |
-
-### 제어
-
-| 엔드포인트 | 메서드 | 설명 |
-|-----------|--------|------|
-| `/home` | GET | 수직 홈 복귀 |
-| `/home_lift` | GET | 수평 홈 복귀 |
-| `/grip/close` | GET | 그리퍼 닫기 |
-| `/grip/open` | GET | 그리퍼 열기 |
-| `/stop` | GET | 긴급 정지 |
-| `/reset` | GET | action_log 역순 시험관 복구 |
-| `/clear_log` | GET | 실험 로그 초기화 |
+수직 집기(시약대)와 수평 집기(A/B 거치대)에 따라 `/home`과 `/home_lift` 엔드포인트를 분기 호출하여 시험관 자세를 유지하고, 붓기 시퀀스는 `/beaker_move`로 비커 앞 이동 후 `/beaker_pour`로 기울여 붓기와 홈 복귀를 한 번에 처리합니다. 비상 시 `/stop`으로 즉시 정지하며, `/reset`은 action_log를 역순 추적하여 시험관을 원래 위치로 자동 복구합니다.
 
 ---
 
@@ -342,7 +291,7 @@ cd ~/chemibot && python chemibot_server.py
 
 | 이름 | 역할 | 담당 |
 |------|------|------|
-| 김규대 | 팀장 | 프로젝트 총괄 |
+| 김규태 | 팀장 | 프로젝트 총괄 |
 | **김수영** | **팀원** | **제스처 인식 설계 및 학습, 로봇팔 제어 연동, WPF 모니터링 UI 설계 및 구현, 얼굴 인증, React 웹 관리자, 안전 시스템 연동** |
 | 정서현 | 팀원 | 하드웨어 제어, FSM 설계, 서보모터 도어 제어, 보안실 WPF |
 | 강은비 | 팀원 | Flask 서버, WebSocket 통신, 웹 UI |
