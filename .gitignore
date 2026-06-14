@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.dist-info/
+
+# dlib 관련
+dlib_files/
+*.so
+
+# 환경설정
+*.env
+.env
+
+# Arduino
+*.ino.elf
+*.ino.hex
+*.ino.with_bootloader.hex
+
+# 실행 전 사전조치 (로컬용 문서)
+실행 전에 해야 할 사전 조치.txt
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+*.suo
+*.user
