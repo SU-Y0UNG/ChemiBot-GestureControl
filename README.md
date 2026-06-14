@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  MediaPipe 손동작 인식 · 시선 추적 커서 제어 · 얼굴 인증 · myCobot 로봇팔 연동 · WPF 모니터링 · React 관리자 화면을 통합한<br/>
+  MediaPipe 손동작 인식 · 시선 추적 커서 제어·얼굴 인증·myCobot 로봇팔 연동·WPF 모니터링·React 관리자 화면을 통합한<br/>
   시선과 제스처 기반 화학 실험 자동화 시스템입니다.
 </p>
 
