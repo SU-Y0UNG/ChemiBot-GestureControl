@@ -27,6 +27,12 @@ MediaPipe Hands 기반 9가지 제스처를 RandomForest로 분류하고, 시선
 
 가스 누출·쓰러짐 감지·비상버튼 등 5종 비상 이벤트를 통합 처리하고, 서보모터 기반 자동 도어 잠금 및 환풍기 제어까지 포함한 안전 시스템을 구축하였습니다.
 
+## 🎥 시연 영상
+
+[![CHEMIBOT Demo](https://img.youtube.com/vi/Y3F8D_rtNRQ/0.jpg)](https://youtu.be/Y3F8D_rtNRQ)
+
+▶ [시연 영상 보러가기](https://youtu.be/Y3F8D_rtNRQ)
+
 ---
 
 ## ⚙️ 주요 기능
